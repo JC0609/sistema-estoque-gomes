@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Histórico de Movimentações</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <h2>GOMES</h2>
+        <p>Controle de Estoque</p>
+
+        <nav>
+            <a href="/">Painel inicial</a>
+            <a href="/cadastro">Cadastrar materiais</a>
+            <a href="/consulta">Consultar materiais</a>
+            <a href="/entrada">Entrada de materiais</a>
+            <a href="/saida">Saída de materiais</a>
+            <a href="/historico">Histórico</a>
+        </nav>
+    </aside>
+
+    <main>
+
+        <h1>Histórico de Movimentações</h1>
+
+        <p>Consulte todas as entradas e saídas realizadas no estoque.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Código</th>
+                    <th>Material</th>
+                    <th>Tipo</th>
+                    <th>Quantidade</th>
+                    <th>Data e horário</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+
+                {% for movimento in movimentacoes %}
+
+                <tr>
+                    <td>{{ movimento[0] }}</td>
+                    <td>{{ movimento[1] }}</td>
+                    <td>{{ movimento[2] }}</td>
+
+                    <td>
+                        {% if movimento[3] == 'Entrada' %}
+                            <span class="status normal">Entrada</span>
+
+                        {% elif movimento[3] == 'Saída' %}
+                            <span class="status critico">Saída</span>
+
+                        {% elif movimento[3] == 'Ajuste' %}
+                            <span class="status ajuste">Ajuste</span>
+
+                        {% endif %}
+                    </td>
+
+                    <td>{{ movimento[4] }}</td>
+                    <td>{{ movimento[5] }}</td>
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td colspan="6">Nenhuma movimentação registrada.</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+        <a href="/" class="botao-voltar">
+            ← Voltar ao painel inicial
+        </a>
+
+    </main>
+
+</body>
+</html>

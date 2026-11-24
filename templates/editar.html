@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Material - Gomes</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <aside class="sidebar">
+            <h2>GOMES</h2>
+            <p>Controle de Estoque</p>
+
+            <nav>
+                <a href="/">Painel inicial</a>
+                <a href="/cadastro">Cadastrar materiais</a>
+                <a href="/consulta">Consultar materiais</a>
+                <a href="/entrada">Entrada de materiais</a>
+                <a href="/saida">Saída de materiais</a>
+                <a href="/historico">Histórico</a>
+            </nav>
+        </aside>
+
+        <main class="conteudo">
+
+            <h1>Editar material</h1>
+            <p>Atualize as informações do material cadastrado.</p>
+
+            <form action="/atualizar/{{ material[0] }}" method="POST" class="formulario">
+
+                <div class="campo">
+                    <label>Código:</label>
+                    <input type="text" name="codigo" value="{{ material[1] }}" required>
+                </div>
+
+                <div class="campo">
+                    <label>Nome:</label>
+                    <input type="text" name="nome" value="{{ material[2] }}" required>
+                </div>
+
+                <div class="campo">
+                    <label>Categoria:</label>
+                    <input type="text" name="categoria" value="{{ material[3] }}">
+                </div>
+
+                <div class="campo">
+                    <label>Localização:</label>
+                    <input type="text" name="localizacao" value="{{ material[4] }}">
+                </div>
+
+                <div class="campo">
+                    <label>Quantidade:</label>
+                    <input type="number" name="quantidade" value="{{ material[5] }}" min="0" required>
+                </div>
+
+                <div class="campo">
+                    <label>Estoque mínimo:</label>
+                    <input type="number" name="estoque_minimo" value="{{ material[6] }}" min="0" required>
+                </div>
+
+                <button type="submit">Salvar alterações</button>
+
+            </form>
+
+            <a href="/consulta" class="botao-voltar">← Voltar à consulta</a>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

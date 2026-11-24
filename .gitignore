@@ -1,0 +1,9 @@
+.env
+__pycache__/
+*.pyc
+database/estoque.db
+database/estoque_backup.db
+.venv/
+venv/
+instance/
+database/estoque_backup.db.db

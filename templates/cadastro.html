@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cadastrar Material - Gomes</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+
+    <h2>GOMES</h2>
+    <p>Controle de Estoque</p>
+
+    <nav>
+        <a href="/">Painel inicial</a>
+        <a href="/cadastro">Cadastrar materiais</a>
+        <a href="/consulta">Consultar materiais</a>
+        <a href="/entrada">Entrada de materiais</a>
+        <a href="/saida">Saída de materiais</a>
+        <a href="/historico">Histórico</a>
+    </nav>
+
+    </aside>
+
+    <div class="conteudo">
+
+
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% if mensagens %}
+                {% for categoria, mensagem in mensagens %}
+                    <div class="mensagem {{ categoria }}">
+                        {{ mensagem }}
+                    </div>
+                {% endfor %} 
+            {% endif %}
+        {% endwith %}
+
+        <h1>Cadastrar Material</h1>
+
+        <p>Preencha os dados do material abaixo.</p>
+
+        <section class="tabela">
+
+            <form action="/cadastrar" method="POST">
+
+                <label>Código do material:</label>
+                <input type="text" name="codigo" placeholder="Ex: MAT004" required>
+
+                <label>Nome do material:</label>
+                <input type="text" name="nome" placeholder="Ex: Porca" required>
+
+                <label>Categoria:</label>
+                <input type="text" name="categoria" placeholder="Ex: Fixadores">
+
+                <label>Localização:</label>
+                <input type="text" name="localizacao" placeholder="Ex: A-03-01">
+
+                <label>Quantidade:</label>
+                <input type="number" name="quantidade" min="0" required>
+
+                <label>Estoque mínimo:</label>
+                <input type="number" name="estoque_minimo" min="0" required>
+
+                <button type="submit">Cadastrar material</button>
+
+            </form>
+
+            <br>
+
+            <a href="/" class="botao-voltar">← Voltar ao painel inicial</a>
+
+        </section>
+
+    </div>
+
+</body>
+</html>

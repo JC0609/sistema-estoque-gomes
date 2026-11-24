@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sistema de Estoque Gomes</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <aside class="sidebar">
+
+            <h2>GOMES</h2>
+            <p>Controle de Estoque</p>
+
+            <nav>
+                <a href="/">Painel inicial</a>
+                <a href="/cadastro">Cadastrar materiais</a>
+                <a href="/consulta">Consultar materiais</a>
+                <a href="/entrada">Entrada de materiais</a>
+                <a href="/saida">Saída de materiais</a>
+                <a href="/historico">Histórico</a>
+            </nav>
+
+        </aside>
+
+
+        <main class="conteudo">
+
+            <h1>Painel de Controle</h1>
+
+            <p>Bem-vindo ao almoxarifado!</p>
+
+            
+            
+            <section class="cards">
+
+                <div class="card">
+                    <h3>Materiais cadastrados</h3>
+                    <p>{{ total_materiais }}</p>
+                </div>
+
+                <div class="card">
+                    <h3>Estoque disponível</h3>
+                    <p>{{ estoque_disponivel }}</p>
+                </div>
+
+                <div class="card">
+                    <h3>Estoque baixo</h3>
+                    <p>{{ estoque_baixo }}</p>
+                </div>
+
+                <div class="card">
+                    <h3>Estoque crítico</h3>
+                    <p>{{ estoque_critico }}</p>
+                </div>
+
+            </section>
+
+
+            
+            
+            <section class="tabela">
+
+                <h2>Materiais cadastrados</h2>
+
+                <table>
+
+                    <tr>
+                        <th>Código</th>
+                        <th>Material</th>
+                        <th>Categoria</th>
+                        <th>Localização</th>
+                        <th>Quantidade</th>
+                        <th>Estoque mínimo</th>
+                        <th>Situação</th>
+                    </tr>
+
+                    {% for material in materiais %}
+                    <tr>
+                        <td>{{ material[1] }}</td>
+                        <td>{{ material[2] }}</td>
+                        <td>{{ material[3] }}</td>
+                        <td>{{ material[4] }}</td>
+                        <td>{{ material[5] }}</td>
+                        <td>{{ material[6] }}</td>
+
+                        <td>
+                            {% if material[5] == 0 %}
+                                <span class="status critico">Crítico</span>
+
+                            {% elif material[5] <= material[6] %}
+                                <span class="status baixo">Baixo</span>
+
+                            {% else %}
+                                <span class="status normal">Normal</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+            </section>
+
+            <section class="tabela">
+
+                <h2>Materiais que precisam de reposição</h2>
+
+                <table>
+
+                    <tr>
+                        <th>Código</th>
+                        <th>Material</th>
+                        <th>Localização</th>
+                        <th>Quantidade atual</th>
+                        <th>Estoque mínimo</th>
+                        <th>Situação</th>
+                    </tr>
+
+                    {% for material in materiais_alerta %}
+
+                    <tr>
+                        <td>{{ material[1] }}</td>
+                        <td>{{ material[2] }}</td>
+                        <td>{{ material[4] }}</td>
+                        <td>{{ material[5] }}</td>
+                        <td>{{ material[6] }}</td>
+
+                        <td>
+                            {% if material[5] == 0 %}
+                                <span class="status critico">Crítico</span>
+                            {% else %}
+                                <span class="status baixo">Baixo</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="6">
+                            Nenhum material precisa de reposição.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            </section>
+
+
+            <section class="tabela">
+
+                <h2>Últimas movimentações</h2>
+
+                <table>
+
+                    <tr>
+                        <th>Código</th>
+                        <th>Material</th>
+                        <th>Tipo</th>
+                        <th>Quantidade</th>
+                        <th>Data e hora</th>
+                    </tr>
+
+                    {% for mov in ultimas_movimentacoes %}
+
+                    <tr>
+                        <td>{{ mov[0] }}</td>
+                        <td>{{ mov[1] if mov[1] else 'Material não cadastrado' }}</td>
+
+                        <td>
+                            {% if mov[2] == 'Entrada' %}
+                                <span class="status normal">Entrada</span>
+                            {% else %}
+                                <span class="status critico">Saída</span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ mov[3] }}</td>
+                        <td>{{ mov[4] }}</td>
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="5">Nenhuma movimentação registrada.</td>
+                    </tr>
+
+                    {% endfor %}
+
+                </table>
+
+                <a href="/historico" class="botao-editar">
+                    Ver histórico completo
+                </a>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+</body>
+</html>
