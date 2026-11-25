@@ -362,6 +362,7 @@ def atualizar(id):
 
 
 
+
 @app.route("/excluir/<int:id>", methods=["POST"])
 def excluir(id):
 
@@ -383,10 +384,14 @@ def excluir(id):
 
     codigo = material[0]
 
-    # Verifica se existem movimentações desse material
+    # Verifica se existem movimentações diferentes de Cadastro
     cursor.execute(
-        "SELECT COUNT(*) FROM movimentacoes WHERE codigo = %s",
-        (codigo,)
+        """
+        SELECT COUNT(*)
+        FROM movimentacoes
+        WHERE codigo = %s AND tipo <> %s
+        """,
+        (codigo, "Cadastro")
     )
 
     total_movimentacoes = cursor.fetchone()[0]
@@ -398,6 +403,15 @@ def excluir(id):
             "erro"
         )
         return redirect("/consulta")
+
+    # Remove os registros de Cadastro do histórico
+    cursor.execute(
+        """
+        DELETE FROM movimentacoes
+        WHERE codigo = %s AND tipo = %s
+        """,
+        (codigo, "Cadastro")
+    )
 
     # Exclui o material
     cursor.execute(

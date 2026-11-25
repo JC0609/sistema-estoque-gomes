@@ -1,175 +1,185 @@
 
-<!DOCTYPE html>
-<html lang="pt-br">
+    <!DOCTYPE html>
+    <html lang="pt-br">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Consultar Materiais - Gomes</title>
+        <title>Consultar Materiais - Gomes</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
 
-<body>
+    <body>
 
-    <aside class="sidebar">
+        <aside class="sidebar">
 
-    <h2>GOMES</h2>
-    <p>Controle de Estoque</p>
+        <h2>GOMES</h2>
+        <p>Controle de Estoque</p>
 
-    <nav>
-        <a href="/">Painel inicial</a>
-        <a href="/cadastro">Cadastrar materiais</a>
-        <a href="/consulta">Consultar materiais</a>
-        <a href="/entrada">Entrada de materiais</a>
-        <a href="/saida">Saída de materiais</a>
-        <a href="/historico">Histórico</a>
-    </nav>
+        <nav>
+            <a href="/">Painel inicial</a>
+            <a href="/cadastro">Cadastrar materiais</a>
+            <a href="/consulta">Consultar materiais</a>
+            <a href="/entrada">Entrada de materiais</a>
+            <a href="/saida">Saída de materiais</a>
+            <a href="/historico">Histórico</a>
+        </nav>
 
-    </aside>
+        </aside>
 
-    <div class="conteudo">
+        <div class="conteudo">
 
-        <h1>Consultar Materiais</h1>
-
-        <p>Pesquise materiais pelo código ou pelo nome.</p>
-
-        <section class="tabela">
-
-            <form action="/consulta" method="GET">
-
-                <label>Digite o código ou nome do material:</label>
-
-                <input
-                    type="text"
-                    name="busca"
-                    placeholder="Ex: MAT001 ou Parafuso"
-                >
-
-                <label>Filtrar por categoria:</label>
-
-                <select name="categoria">
-                    <option value="">Todas as categorias</option>
-
-                    {% for cat in categorias %}
-                        <option value="{{ cat[0] }}"
-                            {% if categoria_selecionada == cat[0] %}selected{% endif %}>
-                            {{ cat[0] }}
-                        </option>
+            {% with mensagens = get_flashed_messages(with_categories=true) %}
+                {% if mensagens %}
+                    {% for categoria, mensagem in mensagens %}
+                        <div class="mensagem {{ categoria }}">
+                             {{ mensagem }}
+                        </div>
                     {% endfor %}
-                </select>
+                {% endif %}
+            {% endwith %}
+
+            <h1>Consultar Materiais</h1>
+
+            <p>Pesquise materiais pelo código ou pelo nome.</p>
+
+            <section class="tabela">
+
+                <form action="/consulta" method="GET">
+
+                    <label>Digite o código ou nome do material:</label>
+
+                    <input
+                        type="text"
+                        name="busca"
+                        placeholder="Ex: MAT001 ou Parafuso"
+                    >
+
+                    <label>Filtrar por categoria:</label>
+
+                    <select name="categoria">
+                        <option value="">Todas as categorias</option>
+
+                        {% for cat in categorias %}
+                            <option value="{{ cat[0] }}"
+                                {% if categoria_selecionada == cat[0] %}selected{% endif %}>
+                                {{ cat[0] }}
+                            </option>
+                        {% endfor %}
+                    </select>
 
 
-                <label>Filtrar por situação do estoque</label>
+                    <label>Filtrar por situação do estoque</label>
 
-                <select name="situacao">
+                    <select name="situacao">
 
-                    <option value="">Todas as situações</option>
+                        <option value="">Todas as situações</option>
 
-                    <option value="normal"
-                        {% if situacao_selecionada == 'normal' %}selected{% endif %}>
-                        Normal
-                    </option>
+                        <option value="normal"
+                            {% if situacao_selecionada == 'normal' %}selected{% endif %}>
+                            Normal
+                        </option>
 
-                    <option value="baixo"
-                        {% if situacao_selecionada == 'baixo' %}selected{% endif %}>
-                        Estoque baixo
-                    </option>
+                        <option value="baixo"
+                            {% if situacao_selecionada == 'baixo' %}selected{% endif %}>
+                            Estoque baixo
+                        </option>
 
-                    <option value="critico"
-                        {% if situacao_selecionada == 'critico' %}selected{% endif %}>
-                        Estoque crítico
-                    </option>
+                        <option value="critico"
+                            {% if situacao_selecionada == 'critico' %}selected{% endif %}>
+                            Estoque crítico
+                        </option>
 
-                </select>
-
-
-
-                <button type="submit">Pesquisar</button>
+                    </select>
 
 
-            </form>
 
-            <br>
+                    <button type="submit">Pesquisar</button>
 
-            
 
-        </section>
+                </form>
 
-        {% if materiais %}
+                <br>
 
-        <section class="tabela">
+                
 
-            <h2>Resultado da pesquisa</h2>
+            </section>
 
-            <table>
+            {% if materiais %}
 
-                <tr>
-                    <th>Código</th>
-                    <th>Material</th>
-                    <th>Categoria</th>
-                    <th>Localização</th>
-                    <th>Quantidade</th>
-                    <th>Estoque mínimo</th>
-                    <th>Situação</th>
-                    <th>Ações</th>
-                </tr>
+            <section class="tabela">
 
-                {% for material in materiais %}
+                <h2>Resultado da pesquisa</h2>
 
-                <tr>
-                    <td>{{ material[1] }}</td>
-                    <td>{{ material[2] }}</td>
-                    <td>{{ material[3] }}</td>
-                    <td>{{ material[4] }}</td>
-                    <td>{{ material[5] }}</td>
-                    <td>{{ material[6] }}</td>
-                    <td>
-                        {% if material[5] == 0 %}
-                            <span class="status critico">Crítico</span>
+                <table>
 
-                        {% elif material[5] <= material[6] %}
-                            <span class="status baixo">Baixo</span>
+                    <tr>
+                        <th>Código</th>
+                        <th>Material</th>
+                        <th>Categoria</th>
+                        <th>Localização</th>
+                        <th>Quantidade</th>
+                        <th>Estoque mínimo</th>
+                        <th>Situação</th>
+                        <th>Ações</th>
+                    </tr>
 
-                        {% else %}
-                            <span class="status normal">Normal</span>
-                        {% endif %}
-                    </td>
+                    {% for material in materiais %}
 
-                    <td>
-                        <a href="/editar/{{ material[0] }}" class="botao-editar">
-                            Editar
-                        </a>
+                    <tr>
+                        <td>{{ material[1] }}</td>
+                        <td>{{ material[2] }}</td>
+                        <td>{{ material[3] }}</td>
+                        <td>{{ material[4] }}</td>
+                        <td>{{ material[5] }}</td>
+                        <td>{{ material[6] }}</td>
+                        <td>
+                            {% if material[5] == 0 %}
+                                <span class="status critico">Crítico</span>
 
-                        <form action="/excluir/{{ material[0] }}" method="POST"
-                            style="display: inline;"
-                            onsubmit="return confirm('Tem certeza que deseja excluir este material?');">
+                            {% elif material[5] <= material[6] %}
+                                <span class="status baixo">Baixo</span>
 
-                            <button type="submit" class="botao-excluir">
-                                Excluir
-                            </button>
+                            {% else %}
+                                <span class="status normal">Normal</span>
+                            {% endif %}
+                        </td>
 
-                         </form>
-                    </td>
+                        <td>
+                            <a href="/editar/{{ material[0] }}" class="botao-editar">
+                                Editar
+                            </a>
 
-                </tr>
+                            <form action="/excluir/{{ material[0] }}" method="POST"
+                                style="display: inline;"
+                                onsubmit="return confirm('Tem certeza que deseja excluir este material?');">
 
-                {% endfor %}
+                                <button type="submit" class="botao-excluir">
+                                    Excluir
+                                </button>
 
-            </table>
+                            </form>
+                        </td>
 
-        </section>
+                    </tr>
 
-        {% elif busca %}
+                    {% endfor %}
 
-        <p>Nenhum material encontrado.</p>
+                </table>
 
-        {% endif %}
+            </section>
 
-        <a href="/" class="botao-voltar">← Voltar ao painel inicial</a>
+            {% elif busca %}
 
-    </div>
+            <p>Nenhum material encontrado.</p>
 
-</body>
-</html>
+            {% endif %}
+
+            <a href="/" class="botao-voltar">← Voltar ao painel inicial</a>
+
+        </div>
+
+    </body>
+    </html>
