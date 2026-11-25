@@ -137,12 +137,7 @@ def cadastrar():
         flash("Já existe um material cadastrado com esse código.", "erro")
         return redirect("/cadastro")
 
-    # Verifica valores negativos
-    if quantidade < 0 or estoque_minimo < 0:
-        conexao.close()
-        flash("Quantidade e estoque mínimo não podem ser negativos.", "erro")
-        return redirect("/cadastro")
-
+    
     try:
 
         cursor.execute("""
@@ -158,6 +153,13 @@ def cadastrar():
             estoque_minimo
         ))
 
+        # Registra o cadastro no histórico de movimentações
+        cursor.execute("""
+            INSERT INTO movimentacoes
+            (codigo, tipo, quantidade)
+            VALUES (%s, %s, %s)
+        """, (codigo, "Cadastro", quantidade))
+
         conexao.commit()
 
         flash("Material cadastrado com sucesso!", "sucesso")
@@ -167,6 +169,11 @@ def cadastrar():
         conexao.rollback()
 
         flash("Não foi possível cadastrar: esse código já existe.", "erro")
+
+    conexao.close()
+
+    return redirect("/cadastro")
+    flash("Não foi possível cadastrar: esse código já existe.", "erro")
 
     conexao.close()
 

@@ -353,6 +353,11 @@ table tr:hover {
     color: #166534;
 }
 
+.status.cadastro {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
 /* Campo de seleção de categoria */
 
 select {
@@ -429,8 +434,8 @@ label {
 /* Identificação visual dos ajustes */
 
 .status.ajuste {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: #f3e8ff;
+    color: #6b21a8;
 }
 
 
