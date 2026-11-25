@@ -4,11 +4,23 @@ import os
 import psycopg
 from psycopg import IntegrityError
 from dotenv import load_dotenv
+from datetime import timezone
+from zoneinfo import ZoneInfo
 
 # Carrega as informações do arquivo .env
 load_dotenv()
 
 app = Flask(__name__)
+def formatar_data_br(data):
+    if data.tzinfo is None:
+        data = data.replace(tzinfo=timezone.utc)
+
+    data = data.astimezone(ZoneInfo("America/Sao_Paulo"))
+
+    return data.strftime("%d/%m/%Y %H:%M:%S")
+
+
+app.jinja_env.filters["data_br"] = formatar_data_br
 app.secret_key = os.getenv("SECRET_KEY")
 
 # Função para conectar ao banco PostgreSQL
